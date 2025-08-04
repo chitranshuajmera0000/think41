@@ -14,10 +14,10 @@ datasource db {
 }
 
 model User {
-  id             Int      @id @default(autoincrement())
+  id             Int      @id
   first_name     String
   last_name      String
-  email          String   
+  email          String
   age            Int
   gender         String
   state          String
@@ -28,17 +28,21 @@ model User {
   latitude       Float
   longitude      Float
   traffic_source String
-  created_at     DateTime @default(now())
+  created_at     DateTime
+
+  orders         Order[]  @relation("UserOrders")
 }
 
 model Order {
-  order_id     Int       @id @default(autoincrement())
+  order_id     Int      @id
   user_id      Int
   status       String
   gender       String
-  created_at   DateTime  @default(now())
+  created_at   DateTime
   returned_at  DateTime?
   shipped_at   DateTime?
   delivered_at DateTime?
   num_of_item  Int
+
+  user         User     @relation("UserOrders", fields: [user_id], references: [id])
 }
