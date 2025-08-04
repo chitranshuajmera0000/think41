@@ -1,4 +1,6 @@
 import { useState } from 'react'
+
+console.log('API URL:', import.meta.env.VITE_API_URL);
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
