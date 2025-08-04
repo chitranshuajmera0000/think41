@@ -15,9 +15,6 @@ app.get('/customers', async (req, res) => {
 });
 
 
-
-// ...existing code...
-
 app.get('/customers/:id', async (req, res) => {
   const userId = Number(req.params.id);
   try {
@@ -43,7 +40,44 @@ app.get('/customers/:id', async (req, res) => {
   }
 });
 
-// ...existing code...
+app.get('/customers/:id/orders', async (req, res) => {
+  const userId = Number(req.params.id);
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: 'Customer not found' });
+    }
+
+    const orders = await prisma.order.findMany({
+      where: { user_id: userId },
+    });
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({
+      error: 'Failed to fetch orders',
+    });
+  }
+});
+
+app.get('/orders/:order_id', async (req, res) => {
+  const orderId = Number(req.params.order_id);
+  try {
+    const order = await prisma.order.findUnique({
+      where: { order_id: orderId },
+    });
+
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    res.json(order);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch order details' });
+  }
+});
 
 
 const PORT = process.env.PORT || 3000;
