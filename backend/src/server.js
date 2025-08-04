@@ -3,6 +3,9 @@ const { PrismaClient } = require('@prisma/client');
 const app = express();
 const prisma = new PrismaClient();
 
+const cors = require('cors');
+app.use(cors());
+
 app.use(express.json());
 
 app.get('/customers', async (req, res) => {
@@ -11,6 +14,44 @@ app.get('/customers', async (req, res) => {
     res.json(customers);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch customers' });
+  }
+});
+
+app.get('/customers/summary', async (req, res) => {
+
+  try {
+    // Get all users
+
+    const customers = await prisma.user.findMany({
+      select: {
+        id: true,
+        first_name: true,
+        last_name: true,
+        email: true,
+      },
+    });
+
+    // Get order counts grouped by user_id
+    const orderCounts = await prisma.order.groupBy({
+      by: ['user_id'],
+      _count: { user_id: true },
+    });
+        // Map user_id to order count
+    const orderCountMap = {};
+    orderCounts.forEach((o) => {
+      orderCountMap[o.user_id] = o._count.user_id;
+    });
+
+    // Combine user info with order count
+    const summaries = customers.map((c) => ({
+      ...c,
+      orderCount: orderCountMap[c.id] || 0,
+    }));
+
+    res.json(summaries);
+  } catch (error) {
+    console.error("Summary endpoint error:", error); // Add this line
+    res.status(500).json({ error: 'Failed to fetch customer summaries' });
   }
 });
 
@@ -48,7 +89,7 @@ app.get('/customers/:id/orders', async (req, res) => {
     });
 
     if (!user) {
-      return res.status(404).json({ error: 'Customer not found' });
+      return res.status(404).json({ error: 'User not found' });
     }
 
     const orders = await prisma.order.findMany({

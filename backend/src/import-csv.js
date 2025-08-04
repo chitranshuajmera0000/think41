@@ -43,14 +43,22 @@ function importUsers() {
     });
 }
 
-function importOrders() {
+async function importOrders() {
     const orders = [];
+    // Get all user IDs from the database
+    const users = await prisma.user.findMany({ select: { id: true } });
+    const userIds = new Set(users.map(u => u.id));
+
     return new Promise((resolve, reject) => {
         fs.createReadStream('E:\\COURSE\\PROJECTS\\Think41\\orders.csv')
             .pipe(csv())
             .on('data', (row) => orders.push(row))
             .on('end', async () => {
                 for (const order of orders) {
+                    if (!userIds.has(Number(order.user_id))) {
+                        // Skip orders for users not present in the user table
+                        continue;
+                    }
                     try {
                         await prisma.order.create({
                             data: {
@@ -77,7 +85,7 @@ function importOrders() {
 }
 
 async function main() {
-    await importUsers();
+    // await importUsers();
     await importOrders();
     await prisma.$disconnect();
 }

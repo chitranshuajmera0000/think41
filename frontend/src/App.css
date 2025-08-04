@@ -1,42 +1,106 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+body {
+  background: #f4f6fb;
+  font-family: 'Segoe UI', Arial, sans-serif;
 }
 
 .card {
-  padding: 2em;
+  max-width: 700px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 32px 24px;
+  border-radius: 14px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.09);
 }
 
-.read-the-docs {
-  color: #888;
+h2 {
+  text-align: center;
+  margin-bottom: 24px;
+  color: #222;
+  letter-spacing: 1px;
+}
+
+.search {
+  width: 100%;
+  padding: 12px 16px;
+  margin-bottom: 22px;
+  border: 1px solid #e0e0e0;
+  border-radius: 7px;
+  font-size: 16px;
+  background: #fafbfc;
+  transition: border 0.2s;
+}
+
+.search:focus {
+  border: 1.5px solid #007bff;
+  outline: none;
+}
+
+.customer-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.customer-table th, .customer-table td {
+  padding: 13px 10px;
+  text-align: left;
+}
+
+.customer-table th {
+  background: #f0f4fa;
+  color: #444;
+  font-weight: 600;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.customer-table tr:nth-child(even) {
+  background: #f8fafc;
+}
+
+.badge {
+  display: inline-block;
+  background: #007bff;
+  color: #fff;
+  border-radius: 12px;
+  padding: 4px 14px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+}
+
+.pagination button {
+  padding: 7px 20px;
+  border: none;
+  border-radius: 7px;
+  background: #007bff;
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.pagination button:disabled {
+  background: #b3d1ff;
+  cursor: not-allowed;
+}
+
+/* ...existing styles... */
+.loading-spinner {
+  margin: 40px auto;
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid #007bff;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
 }
