@@ -13,24 +13,9 @@ function importUsers() {
             .on('end', async () => {
                 for (const user of users) {
                     try {
-                        await prisma.user.upsert({
-                            where: { email: user.email },
-                            update: {
-                                first_name: user.first_name,
-                                last_name: user.last_name,
-                                age: Number(user.age),
-                                gender: user.gender,
-                                state: user.state,
-                                street_address: user.street_address,
-                                postal_code: user.postal_code,
-                                city: user.city,
-                                country: user.country,
-                                latitude: Number(user.latitude),
-                                longitude: Number(user.longitude),
-                                traffic_source: user.traffic_source,
-                                created_at: new Date(user.created_at),
-                            },
-                            create: {
+                        await prisma.user.create({
+                            data: {
+                                id: Number(user.id),
                                 first_name: user.first_name,
                                 last_name: user.last_name,
                                 email: user.email,
@@ -66,18 +51,23 @@ function importOrders() {
             .on('data', (row) => orders.push(row))
             .on('end', async () => {
                 for (const order of orders) {
-                    await prisma.order.create({
-                        data: {
-                            user_id: Number(order.user_id),
-                            status: order.status,
-                            gender: order.gender,
-                            created_at: new Date(order.created_at),
-                            returned_at: order.returned_at ? new Date(order.returned_at) : null,
-                            shipped_at: order.shipped_at ? new Date(order.shipped_at) : null,
-                            delivered_at: order.delivered_at ? new Date(order.delivered_at) : null,
-                            num_of_item: Number(order.num_of_item),
-                        },
-                    });
+                    try {
+                        await prisma.order.create({
+                            data: {
+                                order_id: Number(order.order_id),
+                                user_id: Number(order.user_id),
+                                status: order.status,
+                                gender: order.gender,
+                                created_at: new Date(order.created_at),
+                                returned_at: order.returned_at ? new Date(order.returned_at) : null,
+                                shipped_at: order.shipped_at ? new Date(order.shipped_at) : null,
+                                delivered_at: order.delivered_at ? new Date(order.delivered_at) : null,
+                                num_of_item: Number(order.num_of_item),
+                            },
+                        });
+                    } catch (e) {
+                        console.error(e);
+                    }
                 }
                 console.log('Orders imported');
                 resolve();
